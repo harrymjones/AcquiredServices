@@ -1,4 +1,239 @@
-<div>
-  <h1>Cisco Acquired Services</h1>
-  
+<div class="container">
+
+  <div class="loading-container" ng-class="{'no-show': !loading}">
+    <span class="glyphicon glyphicon-refresh loading"></span>
+  </div>
+
+  <h1>Initial Discovery</h1>
+
+  <div class="sidenav">
+    <ul>
+      <li class="active"><a href="#">A</a></li>
+      <li><a href="#">B</a></li>
+      <li><a href="#">C</a></li>
+    </ul>
+  </div>
+
+  <div class="main" ng-class="{'animate-up': transition}">
+    <form ng-class="{'active-form': !loading}" class="phase-1 phase-1-a">
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="search">
+            <h4>Owner (Cisco ID)</h4>
+            <span class="glyphicon glyphicon-search"></span>
+            <input input-focus do-focus="!loading" required="true" type="text" ng-model="owner"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="text">
+            <h4>Acquired Entity</h4>
+            <input required="true" type="text" ng-model="entity"/>
+          </div>
+        </div>
+
+        <div class="col-xs-6">
+          <div class="text">
+            <h4>Acquiree Department #</h4>
+            <input required="true" type="text" ng-model="dept"/>
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="search">
+            <span class="glyphicon glyphicon-search"></span>
+            <h4>Vendor Name</h4>
+            <div class="btn-group">
+              <input ng-model="vname" class="lookup" type="text" required="true"/>
+              <ul class="dropdown-menu type vendor" ng-show="vname != undefined && vsuggest">
+                <li ng-click="selectVendor(v)" ng-repeat="v in vendors | filter:vname">
+                  {{v.name}}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-6">
+          <div class="text">
+            <h4>Vendor Address</h4>
+            <input required="true" type="text" ng-model="vaddress1"/><br/>
+            <input class="address" type="text" ng-model="vaddress2"/><br/>
+            <input class="address" type="text" ng-model="vaddress3"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row by-address">
+        <div class="col-xs-6">
+          <div class="text by-address">
+            <h4>Vendor Phone Number</h4>
+            <input required="true" type="text" ng-model="vphone"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="multi">
+            <h4>
+              Vendor Points of Contact 
+              <a href="#" tooltip="Enter a name and press the '+' to add to the list. Remove contacts by pressing the 'x' beside each entry">
+                <span class="glyphicon glyphicon-info-sign"></span>
+              </a>
+            </h4>
+            <span ng-click="addPoc(poc)" class="glyphicon glyphicon-plus"></span>
+            <div class="btn-group" dropdown>
+              <input ng-model="poc" type="text" class="dropdown-toggle" ng-class="{'ng-invalid': pocs.length < 1}" dropdown-toggle placeholder="{{pocs.length}} contacts selected"/>
+              <ul class="dropdown-menu type" ng-click="$event.stopPropagation()" role="menu">
+                <li ng-repeat="i in pocs">
+                  {{i}}
+                  <span ng-click="removePoc(i)" class="glyphicon glyphicon-remove"></span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-6">
+          <div class="text">
+            <h4>Vendor Website</h4>
+            <input type="text" ng-model="website"/>
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="text">
+            <h4>Contract #</h4>
+            <input required="true" type="text" ng-model="contract"/>
+          </div>
+        </div>
+
+        <div class="col-xs-6">
+          <div class="upload">
+            <h4>Upload Contract Image</h4>            
+            <span ng-show="files" ng-click="clearInvoice()" class="glyphicon glyphicon-remove"></span>  
+            <input required="true" type="text" class="filename" ng-model="files"/>
+            <div class="file" ng-file-select ng-model="files">
+              <span class="glyphicon glyphicon-arrow-up"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <h4>Contract Dates</h4>
+          <div class="col-xs-6 date-from">
+            <div class="date">
+              <span class="glyphicon glyphicon-calendar" ></span>
+
+              <span class="glyphicon glyphicon-minus"></span>
+
+              <input required="true" ng-click="openFrom($event)" type="text" datepicker-popup="{{format}}" ng-model="df" is-open="openedFrom" ng-required="true" show-weeks="false" show-button-bar="false"/>
+            </div>
+          </div>
+
+          <div class="col-xs-6 date-to">
+            <div class="date">
+              <span class="glyphicon glyphicon-calendar"></span>
+              
+              <input required="true" ng-disabled="!df" ng-click="openTo($event)"  type="text" datepicker-popup="{{format}}" ng-model="dt" is-open="openedTo" min-date="df" ng-required="true" show-weeks="false" show-button-bar="false"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="text">
+            <h4>Account #</h4>
+            <input required="true" type="text" ng-model="account"/>
+          </div>
+        </div>
+
+        <div class="col-xs-6">
+          <div class="text">
+            <h4>Service Address</h4>
+            <input required="true" type="text" ng-model="saddress1"/><br/>
+            <input class="address" type="text" ng-model="saddress2"/><br/>
+            <input class="address" type="text" ng-model="saddress3"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="row by-address">
+        <div class="col-xs-6">
+          <div class="dropdown by-address">
+            <h4>Service Type</h4>
+            <div class="btn-group" dropdown>
+              <button required="true" ng-model="type" type="button" class="dropdown-toggle" dropdown-toggle>
+                {{typeText}}
+              </button>
+              <ul class="dropdown-menu type" role="menu">
+                <li ng-click="setType('Data')">Data</a></li>
+                <li ng-click="setType('Voice')">Voice</a></li>
+                <li ng-click="setType('Toll Free')">Toll Free</a></li>
+                <li ng-click="setType('CoLocation')">CoLocation</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div class="row">
+        <div class="col-xs-6">
+          <div class="cost">
+            <h4>Invoice MRC</h4>
+            <span class="currency">$</span>
+            <input required="true" type="text" class="currency" ng-model="mrc"/>
+          </div>
+        </div>
+
+        <div class="col-xs-6">
+          <div class="upload">
+            <h4>Upload Invoice</h4> 
+            <span ng-show="files" ng-click="clearInvoice()" class="glyphicon glyphicon-remove"></span>  
+            <input required="true" type="text" class="filename" ng-value="files[0].name"/>
+            <div class="file" ng-file-select ng-model="files">
+              <span class="glyphicon glyphicon-arrow-up"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="next">
+    <a><span ng-click="goTo('phase-1-b')" class="glyphicon glyphicon-play"></span></a>
+  </div>
+
+  <div class="main" ng-show="transition">
+    <div ng-include="next"></div>
+  </div>
+
+  <script>
+    $(function(){
+      $(window).scroll(function(event){       
+        var y = $(this).scrollTop();
+        $('.sidenav').css('margin-top', y-80);       
+      });       
+    });
+  </script>
 </div>
